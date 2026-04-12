@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.0",
-    "ws": "^8.18.0"
+    "ws": "^8.22.1"
   },
   "description": "WebSocket quote feed for the Angular dashboard",
   "engines": {
