@@ -1,0 +1,53 @@
+{
+  "name": "stock-dashboard",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "ng serve --port 7201",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox",
+    "test:watch": "ng test",
+    "test:feed": "npm --prefix server test",
+    "test:all": "npm run test && npm run test:feed",
+    "feed": "node server/index.js",
+    "lint": "eslint . && prettier --check .",
+    "format": "prettier --write .",
+    "ng": "ng"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "^19.2.0",
+    "@angular/compiler": "^19.2.0",
+    "@angular/core": "^19.2.0",
+    "@angular/forms": "^19.2.0",
+    "@angular/platform-browser": "^19.2.0",
+    "@angular/platform-browser-dynamic": "^19.2.0",
+    "@angular/router": "^19.2.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.15.0"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^19.2.24",
+    "@angular/cli": "^19.2.24",
+    "@angular/compiler-cli": "^19.2.0",
+    "@types/jasmine": "~5.1.0",
+    "angular-eslint": "^19.8.1",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^9.1.2",
+    "globals": "^15.15.0",
+    "jasmine-core": "~5.6.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "prettier": "^3.9.9",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.70.1"
+  },
+  "description": "Real-time stock dashboard: an Angular board fed by a Node WebSocket sidecar",
+  "engines": {
+    "node": ">=20.11"
+  }
+}
