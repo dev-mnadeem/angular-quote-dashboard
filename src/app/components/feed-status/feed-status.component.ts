@@ -18,7 +18,7 @@ const LABELS: Record<FeedStatus, string> = {
   selector: 'app-feed-status',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <span class="pill" [attr.data-status]="status()" [title]="source()">
+    <span class="pill" role="status" [attr.data-status]="status()" [title]="source()">
       <span class="pill__dot" aria-hidden="true"></span>
       <span class="pill__label">{{ label() }}</span>
       <span class="visually-hidden">. Source: {{ source() }}</span>
@@ -60,7 +60,7 @@ const LABELS: Record<FeedStatus, string> = {
 
     .pill[data-status='retrying'],
     .pill[data-status='connecting'] {
-      --dot: #d98f24;
+      --dot: var(--warn);
     }
 
     .pill[data-status='demo'] {

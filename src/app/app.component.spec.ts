@@ -115,8 +115,8 @@ describe('AppComponent', () => {
     expect(el().querySelector('.shell__subtitle')?.textContent).toContain('1 declining');
   });
 
-  it('shows the feed status pill', () => {
-    expect(el().querySelector('app-feed-status')?.textContent).toContain('Live');
+  it('shows the feed status pill as a status region', () => {
+    expect(el().querySelector('app-feed-status [role="status"]')?.textContent).toContain('Live');
     transport.state.set('retrying');
     expect(el().querySelector('app-feed-status')?.textContent).toContain('Reconnecting');
   });

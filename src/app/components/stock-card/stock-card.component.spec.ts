@@ -106,10 +106,8 @@ describe('StockCardComponent', () => {
     expect(el.querySelector('.card')?.getAttribute('data-flash')).toBe('down');
   });
 
-  it('announces only the price region, not the whole card', () => {
-    const el = render();
-    expect(el.querySelector('.card')?.getAttribute('aria-live')).toBeNull();
-    expect(el.querySelector('.card__price-block')?.getAttribute('aria-live')).toBe('polite');
+  it('does not announce every tick to screen readers', () => {
+    expect(render().querySelector('[aria-live]')).toBeNull();
   });
 
   it('renders the 52-week band and the previous close', () => {

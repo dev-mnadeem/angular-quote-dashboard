@@ -18,9 +18,10 @@
     </button>
   </header>
 
-  <!-- Only the price region announces updates. Marking the whole card live would
-       re-read the ticker, the name and every statistic on every tick. -->
-  <div class="card__price-block" aria-live="polite" aria-atomic="true">
+  <!-- Deliberately not a live region: four cards ticking every two seconds would
+       bury a screen reader in announcements. The feed status pill announces
+       connection changes instead, and prices are read on demand. -->
+  <div class="card__price-block">
     <p class="card__price">
       <span class="card__currency">$</span>{{ quote().current | number: '1.2-2' }}
     </p>
