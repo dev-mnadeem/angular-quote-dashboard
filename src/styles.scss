@@ -1,0 +1,94 @@
+/* Design tokens. Every colour in the app resolves to one of these, and the dark
+   theme redefines the same names rather than adding a parallel set. */
+:root {
+  color-scheme: light;
+
+  --bg: #eef1f5;
+  --bg-accent: radial-gradient(1200px 600px at 50% -10%, #ffffff 0%, #eef1f5 60%);
+  --surface: #ffffff;
+  --surface-sunken: #f4f6f9;
+  --border: #dbe1e9;
+  --border-strong: #c3ccd8;
+
+  --text: #16202c;
+  --text-muted: #5c6a7a;
+  --text-faint: #8492a2;
+
+  --up: #0f8f4c;
+  --up-soft: #e2f5e9;
+  --up-line: #17a95c;
+  --down: #c62f37;
+  --down-soft: #fdeaeb;
+  --down-line: #e04851;
+  --flat: #5c6a7a;
+  --flat-soft: #eceff3;
+
+  --accent: #2f6fed;
+  --shadow: 0 1px 2px rgb(16 32 44 / 6%), 0 8px 24px -12px rgb(16 32 44 / 18%);
+
+  --radius: 14px;
+  --radius-sm: 8px;
+  --gap: 1rem;
+
+  --font: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-numeric: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0d1117;
+  --bg-accent: radial-gradient(1200px 600px at 50% -10%, #182230 0%, #0d1117 60%);
+  --surface: #161d27;
+  --surface-sunken: #111821;
+  --border: #253040;
+  --border-strong: #35455a;
+
+  --text: #e8eef6;
+  --text-muted: #9bacc0;
+  --text-faint: #6d8096;
+
+  --up: #46d98a;
+  --up-soft: #12301f;
+  --up-line: #46d98a;
+  --down: #ff7a85;
+  --down-soft: #351317;
+  --down-line: #ff7a85;
+  --flat: #9bacc0;
+  --flat-soft: #1c2532;
+
+  --accent: #5c92ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 10px 30px -14px rgb(0 0 0 / 70%);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font);
+  background: var(--bg);
+  background-image: var(--bg-accent);
+  color: var(--text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

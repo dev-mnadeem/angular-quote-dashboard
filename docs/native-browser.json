@@ -1,0 +1,12 @@
+{
+  "mode": "Real native WebSocket sidecar, seeded synthetic quotes and heuristic commentary; no vendor calls",
+  "checks": [
+    "Four quote cards",
+    "Native WebSocket frames received",
+    "Pause and resume symbol",
+    "Sort gainers",
+    "Theme switch",
+    "Desktop/mobile capture",
+    "No page errors"
+  ]
+}

@@ -1,0 +1,267 @@
+:host {
+  display: block;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.card {
+  /* `--tone` is the one knob the session direction turns; everything else on the
+     card derives from it, so adding a direction means adding one selector. */
+  --tone: var(--flat);
+  --tone-soft: var(--flat-soft);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  height: 100%;
+  padding: 1.1rem 1.15rem 1.15rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.card[data-session='up'] {
+  --tone: var(--up);
+  --tone-soft: var(--up-soft);
+}
+
+.card[data-session='down'] {
+  --tone: var(--down);
+  --tone-soft: var(--down-soft);
+}
+
+/* The tick flash is a border tint, not a full-tile fill: a whole card changing
+   colour four times a minute is hard to read and harder to look at. */
+.card[data-flash='up'] {
+  border-color: color-mix(in srgb, var(--up) 45%, var(--border));
+}
+
+.card[data-flash='down'] {
+  border-color: color-mix(in srgb, var(--down) 45%, var(--border));
+}
+
+:host(.card-host--paused) .card {
+  background: var(--surface-sunken);
+  border-style: dashed;
+}
+
+:host(.card-host--paused) .card__price-block {
+  opacity: 0.62;
+}
+
+.card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.card__ticker {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.card__name {
+  margin: 0.1rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.card__price-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.card__price {
+  margin: 0;
+  font-family: var(--font-numeric);
+  font-size: clamp(1.7rem, 3.2vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.card__currency {
+  font-size: 0.55em;
+  color: var(--text-faint);
+  margin-right: 0.12em;
+  vertical-align: 0.35em;
+}
+
+.card__change {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: var(--tone-soft);
+  color: var(--tone);
+  font-family: var(--font-numeric);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The arrow carries the same information as the colour, so direction survives
+   greyscale printing and the common forms of colour blindness. */
+.card__arrow {
+  font-size: 0.7em;
+  line-height: 1;
+}
+
+.card__spark {
+  --spark-colour: var(--tone);
+}
+
+.card__range-track {
+  position: relative;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--down-line), var(--border-strong), var(--up-line));
+  opacity: 0.55;
+}
+
+.card__range-marker {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--tone);
+  transform: translate(-50%, -50%);
+  transition: left 0.35s ease;
+}
+
+.card__range-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  font-family: var(--font-numeric);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.card__range-tag {
+  margin-right: 0.3rem;
+  font-family: var(--font);
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: 0.62rem;
+}
+
+.card__range-caption {
+  font-family: var(--font);
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.62rem;
+}
+
+.card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+.card__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.card__stat dt {
+  font-size: 0.62rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.card__stat dd {
+  margin: 0;
+  font-family: var(--font-numeric);
+  font-size: 0.83rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.card__pause {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.22rem 0.5rem 0.22rem 0.28rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.card__pause:hover {
+  border-color: var(--border-strong);
+}
+
+.card__pause:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.card__pause-track {
+  position: relative;
+  width: 1.9rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background 0.2s ease;
+}
+
+.card__pause--on .card__pause-track {
+  background: var(--up);
+}
+
+.card__pause-knob {
+  position: absolute;
+  top: 50%;
+  left: 0.12rem;
+  width: 0.76rem;
+  height: 0.76rem;
+  border-radius: 50%;
+  background: #fff;
+  transform: translateY(-50%);
+  transition: left 0.2s ease;
+}
+
+.card__pause--on .card__pause-knob {
+  left: calc(100% - 0.76rem - 0.12rem);
+}

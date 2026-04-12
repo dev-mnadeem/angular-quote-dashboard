@@ -1,0 +1,9 @@
+{
+  "$comment": "Single source of truth for the symbol universe. Imported by the Angular app and read by the Node feed sidecar.",
+  "symbols": [
+    { "symbol": "AAPL", "name": "Apple", "referencePrice": 178, "volatility": 0.004 },
+    { "symbol": "GOOGL", "name": "Alphabet", "referencePrice": 140, "volatility": 0.006 },
+    { "symbol": "MSFT", "name": "Microsoft", "referencePrice": 420, "volatility": 0.003 },
+    { "symbol": "TSLA", "name": "Tesla", "referencePrice": 248, "volatility": 0.011 }
+  ]
+}
