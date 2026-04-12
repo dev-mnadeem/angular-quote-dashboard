@@ -48,6 +48,6 @@
   },
   "description": "Real-time stock dashboard: an Angular board fed by a Node WebSocket sidecar",
   "engines": {
-    "node": ">=20.11"
+    "node": "^22.12.0"
   }
 }

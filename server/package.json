@@ -13,6 +13,6 @@
   },
   "description": "WebSocket quote feed for the Angular dashboard",
   "engines": {
-    "node": ">=20.11"
+    "node": "^22.12.0"
   }
 }

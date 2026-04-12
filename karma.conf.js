@@ -1,8 +1,6 @@
 // Karma is configured explicitly (rather than left to the CLI default) so the
-// suite runs headless in CI with no browser window and no watch mode.
-process.env.CHROME_BIN =
-  process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-
+// suite can run headless in a container. karma-chrome-launcher finds an
+// installed Chrome on its own; point CHROME_BIN at Chromium anywhere else.
 module.exports = function (config) {
   config.set({
     basePath: '',

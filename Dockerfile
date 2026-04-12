@@ -18,7 +18,7 @@ COPY shared ./shared
 COPY public ./public
 COPY src ./src
 RUN npm run build
-# Angular 19 emits the browser bundle into dist/<project>/browser.
+# The application builder emits the browser bundle into dist/<project>/browser.
 RUN test -f dist/stock-dashboard/browser/index.html
 
 # ---------- web runtime ----------
