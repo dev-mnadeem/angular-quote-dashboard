@@ -195,6 +195,20 @@ describe('WebSocketQuoteTransport', () => {
     transport.disconnect();
   });
 
+  it('counts a throwing socket factory toward the demo fallback', () => {
+    const transport = build({
+      attemptsBeforeGivingUp: 2,
+      socketFactory: () => {
+        throw new Error('blocked');
+      },
+    });
+    transport.connect();
+    expect(transport.status()).toBe('retrying');
+    jasmine.clock().tick(100);
+    expect(transport.status()).toBe('demo');
+    transport.disconnect();
+  });
+
   it('caps the retry delay', () => {
     const transport = build({ baseRetryDelayMs: 1000, maxRetryDelayMs: 50 });
     transport.connect();

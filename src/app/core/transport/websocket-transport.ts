@@ -86,6 +86,9 @@ export class WebSocketQuoteTransport implements QuoteTransport {
     try {
       socket = this.options.socketFactory(this.options.url);
     } catch {
+      // A constructor that throws (bad URL, blocked by policy) is a failed attempt
+      // like any other, so it counts toward backoff and the demo fallback.
+      this.consecutiveFailures += 1;
       this.scheduleRetry(generation);
       return;
     }
