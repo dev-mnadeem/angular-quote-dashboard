@@ -1,5 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+  TestRequest,
+} from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
@@ -71,8 +75,19 @@ describe('AppComponent', () => {
     transport.subject.next({ type: 'tick', sequence: 1, quotes });
   }
 
-  /** The commentary poll starts on a timer, so let one macrotask elapse first. */
-  const nextTask = (): Promise<void> => new Promise((resolve) => setTimeout(resolve, 0));
+  /**
+   * The commentary poll starts on an RxJS timer, whose first firing can land
+   * after a zero-delay setTimeout under headless Chromium's timer clamping, so
+   * wait for the request itself rather than for a fixed number of macrotasks.
+   */
+  async function commentaryRequest(): Promise<TestRequest> {
+    for (let attempt = 0; attempt < 50; attempt += 1) {
+      const [request] = http.match((r) => r.url.endsWith('/commentary'));
+      if (request) return request;
+      await new Promise((resolve) => setTimeout(resolve, 5));
+    }
+    throw new Error('no /commentary request was made');
+  }
 
   it('creates', () => {
     expect(fixture.componentInstance).toBeTruthy();
@@ -133,14 +148,11 @@ describe('AppComponent', () => {
 
   it('shows commentary once the feed returns it', async () => {
     el();
-    await nextTask();
-    http
-      .expectOne((r) => r.url.endsWith('/commentary'))
-      .flush({
-        text: 'The board is higher.',
-        provider: 'heuristic',
-        generatedAt: '2024-06-17T12:00:00.000Z',
-      });
+    (await commentaryRequest()).flush({
+      text: 'The board is higher.',
+      provider: 'heuristic',
+      generatedAt: '2024-06-17T12:00:00.000Z',
+    });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.note__text')?.textContent).toContain(
       'The board is higher.',
@@ -149,10 +161,7 @@ describe('AppComponent', () => {
 
   it('hides the commentary strip when the feed cannot be reached', async () => {
     el();
-    await nextTask();
-    http
-      .expectOne((r) => r.url.endsWith('/commentary'))
-      .flush(null, { status: 503, statusText: 'x' });
+    (await commentaryRequest()).flush(null, { status: 503, statusText: 'x' });
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.note')).toBeNull();
   });
