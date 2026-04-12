@@ -7,13 +7,16 @@
   max-width: 1320px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 2rem 1.25rem 3rem;
+  padding: 1.5rem 1rem 3rem;
   display: flex;
   flex-direction: column;
-  /* `safe` keeps the top of the page reachable when the content is taller than
-     the viewport; plain `center` would push the header off-screen. */
-  justify-content: safe center;
   gap: 1.25rem;
+}
+
+@media (min-width: 720px) {
+  .shell {
+    padding: 2.5rem 2rem 3rem;
+  }
 }
 
 .shell__head {
@@ -22,19 +25,25 @@
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+  /* A masthead rule: the board is a page of figures, and the heavy line under
+     the title is what separates the paper's name from its contents. */
+  padding-bottom: 0.9rem;
+  border-bottom: 3px double var(--text);
 }
 
 .shell__title {
   margin: 0;
-  font-size: clamp(1.4rem, 2.6vw, 1.8rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.5rem, 2.8vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
 }
 
 .shell__subtitle {
-  margin: 0.3rem 0 0;
-  font-size: 0.82rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
   color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .shell__controls {
@@ -59,15 +68,19 @@
   background: transparent;
   color: var(--text-muted);
   font: inherit;
-  font-size: 0.73rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
 }
 
-.segmented__btn--active {
-  background: var(--surface);
+.segmented__btn:hover {
   color: var(--text);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 12%);
+}
+
+.segmented__btn--active,
+.segmented__btn--active:hover {
+  background: var(--text);
+  color: var(--surface);
 }
 
 .segmented__btn:focus-visible,
@@ -80,15 +93,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--surface);
   color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1;
   cursor: pointer;
+}
+
+.icon-btn svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .icon-btn:hover {

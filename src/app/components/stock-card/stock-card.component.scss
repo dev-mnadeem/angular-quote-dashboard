@@ -57,7 +57,7 @@
 }
 
 :host(.card-host--paused) .card__price-block {
-  opacity: 0.62;
+  opacity: 0.78;
 }
 
 .card__head {
@@ -69,9 +69,10 @@
 
 .card__ticker {
   margin: 0;
+  font-family: var(--font-numeric);
   font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .card__name {
