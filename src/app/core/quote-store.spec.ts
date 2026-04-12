@@ -61,17 +61,51 @@ describe('QuoteStore', () => {
     expect(store.rows()).toEqual([]);
   });
 
-  it('records a snapshot including its history', () => {
-    transport.subject.next({
-      type: 'snapshot',
-      sequence: 1,
-      provider: 'synthetic',
-      quotes: [quote('AAPL', 101)],
-      history: { AAPL: [99, 100] },
-    });
+  function snapshot(provider: string, quotes: StockQuote[], history = {}): void {
+    transport.subject.next({ type: 'snapshot', sequence: 1, provider, quotes, history });
+  }
+
+  it('takes a snapshot history as is, since it already ends with the current price', () => {
+    snapshot('synthetic', [quote('AAPL', 101)], { AAPL: [99, 100, 101] });
     expect(store.provider()).toBe('synthetic');
     expect(store.rows().length).toBe(1);
     expect(store.rows()[0].history).toEqual([99, 100, 101]);
+  });
+
+  it('starts a sparkline at the quote when a snapshot carries no history for it', () => {
+    snapshot('synthetic', [quote('AAPL', 101)], { AAPL: [] });
+    expect(store.rows()[0].history).toEqual([101]);
+  });
+
+  it('replaces the demo board when the live feed sends its snapshot', () => {
+    snapshot('browser synthetic', [quote('AAPL', 300), quote('DEMO', 50)], {
+      AAPL: [290, 300],
+      DEMO: [50],
+    });
+    transport.subject.next({ type: 'tick', sequence: 2, quotes: [quote('AAPL', 310)] });
+    store.togglePause('AAPL');
+
+    snapshot('synthetic', [quote('AAPL', 101)], { AAPL: [100, 101] });
+
+    const [row] = store.rows();
+    expect(store.rows().length).toBe(1);
+    expect(row.quote.current).toBe(101);
+    expect(row.paused).toBeTrue();
+    expect(row.history).toEqual([100, 101]);
+  });
+
+  it('colours the first live snapshot against the previous close, not the demo price', () => {
+    snapshot('browser synthetic', [quote('AAPL', 300)]);
+    // 101 is far below the demo's 300, but 1% above the previous close.
+    snapshot('synthetic', [quote('AAPL', 101, 100)]);
+    expect(store.rows()[0].trend).toBe('up');
+  });
+
+  it('keeps a paused price when the same feed reconnects', () => {
+    snapshot('synthetic', [quote('AAPL', 100)]);
+    store.togglePause('AAPL');
+    snapshot('synthetic', [quote('AAPL', 120)]);
+    expect(store.rows()[0].quote.current).toBe(100);
   });
 
   it('bounds the history it keeps for a long-running page', () => {

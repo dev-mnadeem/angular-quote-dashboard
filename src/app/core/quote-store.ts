@@ -116,36 +116,50 @@ export class QuoteStore {
   }
 
   private apply(message: FeedMessage): void {
-    if (message.type === 'snapshot') {
-      this.feedProvider.set(message.provider);
-      this.series.set(
-        new Map(
-          Object.entries(message.history).map(([symbol, values]) => [
-            symbol,
-            values.slice(-HISTORY_DEPTH),
-          ]),
-        ),
-      );
-    }
+    const snapshot = message.type === 'snapshot';
+    // Going from the demo generator to the live feed (or back) changes the price
+    // path entirely, so the old board is no basis for trends or frozen prices.
+    const switchedSource = snapshot && message.provider !== this.feedProvider();
+    const previous: ReadonlyMap<string, StockQuote> = switchedSource ? new Map() : this.live();
 
-    const live = new Map(this.live());
-    const trends = new Map(this.trends());
-    const series = new Map(this.series());
+    // A snapshot is the whole board, so it replaces what is held instead of merging.
+    const live = snapshot ? new Map<string, StockQuote>() : new Map(previous);
+    const trends = snapshot ? new Map<string, Trend>() : new Map(this.trends());
+    const series = snapshot ? new Map<string, readonly number[]>() : new Map(this.series());
 
     for (const quote of message.quotes) {
-      const previous = live.get(quote.symbol);
-      trends.set(quote.symbol, direction(previous, quote));
+      trends.set(quote.symbol, direction(previous.get(quote.symbol), quote));
       live.set(quote.symbol, quote);
 
-      const history = [...(series.get(quote.symbol) ?? []), quote.current];
+      let history: readonly number[];
+      if (snapshot) {
+        // The feed's history already ends with this quote's price.
+        const given = message.history[quote.symbol];
+        history = given?.length ? given : [quote.current];
+      } else {
+        history = [...(series.get(quote.symbol) ?? []), quote.current];
+      }
       // Bounded: the page can stay open all day and this array cannot grow with it.
       series.set(quote.symbol, history.slice(-HISTORY_DEPTH));
     }
+
+    if (snapshot) this.feedProvider.set(message.provider);
+    if (switchedSource) this.refreeze(live);
 
     this.live.set(live);
     this.trends.set(trends);
     this.series.set(series);
     this.updatedAt.set(message.quotes.at(0)?.asOf ?? new Date().toISOString());
+  }
+
+  /** Paused symbols stay paused, but at a price from the source now on screen. */
+  private refreeze(live: ReadonlyMap<string, StockQuote>): void {
+    const frozen = new Map<string, StockQuote>();
+    for (const symbol of this.pausedSymbols()) {
+      const quote = live.get(symbol);
+      if (quote) frozen.set(symbol, quote);
+    }
+    this.frozen.set(frozen);
   }
 }
 
