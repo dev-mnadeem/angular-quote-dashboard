@@ -1,0 +1,18 @@
+{
+  "name": "stock-dashboard-ws-server",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.0",
+    "ws": "^8.18.0"
+  },
+  "description": "WebSocket quote feed for the Angular dashboard",
+  "engines": {
+    "node": ">=20.11"
+  }
+}
