@@ -1,0 +1,62 @@
+<article class="card" [attr.data-session]="session()" [attr.data-flash]="flash()">
+  <header class="card__head">
+    <div class="card__id">
+      <h2 class="card__ticker">{{ quote().symbol }}</h2>
+      <p class="card__name">{{ quote().name }}</p>
+    </div>
+    <button
+      type="button"
+      class="card__pause"
+      [class.card__pause--on]="!paused()"
+      [attr.aria-pressed]="paused()"
+      [attr.aria-label]="'Pause updates for ' + quote().name"
+      [title]="statusLabel()"
+      (click)="toggle()"
+    >
+      <span class="card__pause-track"><span class="card__pause-knob"></span></span>
+      <span class="card__pause-text">{{ paused() ? 'Paused' : 'Live' }}</span>
+    </button>
+  </header>
+
+  <!-- Only the price region announces updates. Marking the whole card live would
+       re-read the ticker, the name and every statistic on every tick. -->
+  <div class="card__price-block" aria-live="polite" aria-atomic="true">
+    <p class="card__price">
+      <span class="card__currency">$</span>{{ quote().current | number: '1.2-2' }}
+    </p>
+    <p class="card__change">
+      <span class="card__arrow" aria-hidden="true">{{ arrow() }}</span>
+      <span class="card__change-abs">{{ quote().change | number: '1.2-2' }}</span>
+      <span class="card__change-pct">({{ quote().changePercent | number: '1.2-2' }}%)</span>
+      <span class="visually-hidden">against the previous close</span>
+    </p>
+  </div>
+
+  <app-sparkline class="card__spark" [values]="history()" [trend]="session()" />
+
+  <div class="card__range">
+    <div class="card__range-track">
+      <span class="card__range-marker" [style.left.%]="dayPosition()"></span>
+    </div>
+    <div class="card__range-labels">
+      <span><span class="card__range-tag">Low</span>{{ quote().dayLow | number: '1.2-2' }}</span>
+      <span class="card__range-caption">Day range</span>
+      <span><span class="card__range-tag">High</span>{{ quote().dayHigh | number: '1.2-2' }}</span>
+    </div>
+  </div>
+
+  <dl class="card__stats">
+    <div class="card__stat">
+      <dt>52-week high</dt>
+      <dd>{{ quote().week52High | number: '1.2-2' }}</dd>
+    </div>
+    <div class="card__stat">
+      <dt>52-week low</dt>
+      <dd>{{ quote().week52Low | number: '1.2-2' }}</dd>
+    </div>
+    <div class="card__stat">
+      <dt>Prev. close</dt>
+      <dd>{{ quote().previousClose | number: '1.2-2' }}</dd>
+    </div>
+  </dl>
+</article>
