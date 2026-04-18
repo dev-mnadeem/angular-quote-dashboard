@@ -1,0 +1,26 @@
+services:
+  feed:
+    build:
+      context: .
+      target: feed
+    environment:
+      # Leave FINNHUB_API_KEY unset to serve the deterministic generator, and
+      # ANTHROPIC_API_KEY unset to use the arithmetic commentary summariser.
+      FINNHUB_API_KEY: ${FINNHUB_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      POLL_INTERVAL_MS: ${POLL_INTERVAL_MS:-2000}
+      FEED_SEED: ${FEED_SEED:-20240695}
+    expose:
+      - '7202'
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      target: web
+    ports:
+      - '${WEB_PORT:-7201}:8080'
+    depends_on:
+      feed:
+        condition: service_healthy
+    restart: unless-stopped
