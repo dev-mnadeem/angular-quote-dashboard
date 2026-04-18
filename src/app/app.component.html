@@ -1,0 +1,77 @@
+<div class="shell">
+  <header class="shell__head">
+    <div class="shell__titles">
+      <h1 class="shell__title">Market board</h1>
+      <p class="shell__subtitle">
+        @if (store.isEmpty()) {
+          Waiting for the first quotes…
+        } @else {
+          {{ store.advancing() }} advancing · {{ store.declining() }} declining
+          @if (store.provider(); as provider) {
+            · {{ provider }}
+          }
+        }
+      </p>
+    </div>
+
+    <div class="shell__controls">
+      <app-feed-status [status]="store.status()" [source]="store.source()" />
+
+      <div class="segmented" role="group" aria-label="Sort symbols">
+        @for (option of sortOptions; track option.value) {
+          <button
+            type="button"
+            class="segmented__btn"
+            [class.segmented__btn--active]="store.sortMode() === option.value"
+            [attr.aria-pressed]="store.sortMode() === option.value"
+            (click)="store.setSortMode(option.value)"
+          >
+            {{ option.label }}
+          </button>
+        }
+      </div>
+
+      <button
+        type="button"
+        class="icon-btn"
+        [attr.aria-label]="'Switch to ' + (currentTheme() === 'dark' ? 'light' : 'dark') + ' theme'"
+        (click)="toggleTheme()"
+      >
+        {{ currentTheme() === 'dark' ? '☀' : '☾' }}
+      </button>
+    </div>
+  </header>
+
+  <app-market-commentary class="shell__note" [commentary]="commentary()" />
+
+  @if (store.isEmpty()) {
+    <div class="empty">
+      <p class="empty__title">No quotes yet</p>
+      <p class="empty__body">
+        The dashboard is waiting for the feed on
+        <code>{{ store.source() }}</code
+        >. Start it with <code>npm run feed</code>, or leave this open — after a few failed attempts
+        the page switches to generated demo data on its own.
+      </p>
+    </div>
+  } @else {
+    <div class="grid">
+      @for (row of store.rows(); track row.quote.symbol) {
+        <app-stock-card
+          [quote]="row.quote"
+          [history]="row.history"
+          [trend]="row.trend"
+          [paused]="row.paused"
+          (pauseToggled)="store.togglePause($event)"
+        />
+      }
+    </div>
+  }
+
+  <footer class="shell__foot">
+    <app-feed-health [metrics]="metrics()" />
+    @if (store.lastUpdated(); as at) {
+      <p class="shell__stamp">Last tick at {{ at | date: 'HH:mm:ss' }}</p>
+    }
+  </footer>
+</div>
