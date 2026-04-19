@@ -1,6 +1,6 @@
 # Market board
 
-A live stock quote dashboard. The frontend is an Angular 19 app showing four symbols (AAPL, GOOGL, MSFT, TSLA). A small Node server polls quotes and pushes them to the browser over a WebSocket.
+A live stock quote dashboard. The frontend is an Angular 20 app showing four symbols (AAPL, GOOGL, MSFT, TSLA). A small Node server polls quotes and pushes them to the browser over a WebSocket.
 
 No API keys are needed to try it. Without `FINNHUB_API_KEY` the server generates seeded random-walk prices instead of live quotes.
 
@@ -17,7 +17,7 @@ No API keys are needed to try it. Without `FINNHUB_API_KEY` the server generates
 
 ## Running locally
 
-Requires Node 20.11 or newer. Start the feed server first:
+Validated on Node 22.22.3. Start the feed server first:
 
 ```bash
 npm install --prefix server
@@ -74,3 +74,19 @@ The server suite includes an end-to-end test that starts the real server and con
 - The four symbols are fixed. To change them, edit `shared/symbols.json` and restart.
 - Price history is kept in memory only.
 - Running more than one feed process would mean each polls the vendor separately.
+
+## Native WebSocket verification
+
+![Native synthetic quote board](docs/screenshots/native-desktop.png)
+
+[Mobile capture](docs/screenshots/native-mobile.png) and
+[browser checks](docs/native-browser.json). This run uses the actual Node feed
+sidecar over WebSocket, seeded synthetic quotes, and heuristic commentary. It
+checks four cards, incoming frames, per-symbol pause/resume, gainers sorting,
+and the theme switch. No live quotes or hosted commentary were requested.
+
+The framework and CLI moved together to Angular 20.3 with TypeScript 5.9, matching
+[Angular's compatibility table](https://angular.dev/reference/versions).
+All 95 Angular tests, 57 feed tests, the production build, and lint/format checks
+pass. The production dependency audit reports no advisories for the updated
+framework. Docker images remain unverified locally.
