@@ -90,3 +90,7 @@ The framework and CLI moved together to Angular 20.3 with TypeScript 5.9, matchi
 All 95 Angular tests, 57 feed tests, the production build, and lint/format checks
 pass. The production dependency audit reports no advisories for the updated
 framework. Docker images remain unverified locally.
+
+## Author
+
+[**Muhammad Nadeem**](https://github.com/dev-mnadeem)
